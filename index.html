@@ -1,201 +1,429 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Registration Form</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
     <style>
-        body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:20px;}
-        .form{background:white;padding:40px;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.1);width:100%;max-width:400px;text-align:center;}
-        h1{color:#333;margin-bottom:20px;}
-        input{width:100%;padding:15px;margin:10px 0;border:2px solid #ddd;border-radius:10px;font-size:16px;box-sizing:border-box;}
-        button{width:100%;padding:15px;background:#10b981;color:white;border:none;border-radius:10px;font-size:18px;cursor:pointer;margin-top:10px;font-weight:bold;}
-        button:hover{background:#059669;}
-        button:disabled{background:#ccc;cursor:not-allowed;}
-        
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .form{
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1{
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle{
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        input, select{
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus{
+            outline: none;
+            border-color: #667eea;
+        }
+        .register-btn{
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        .register-btn:hover{
+            transform: translateY(-2px);
+        }
+        .register-btn:disabled{
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         /* SUCCESS POPUP */
-        #successPopup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#10b981;color:white;padding:30px;border-radius:20px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.3);z-index:1000;max-width:90vw;}
-        #successPopup h2{font-size:24px;margin-bottom:10px;}
-        #successPopup p{font-size:16px;margin-bottom:20px;}
-        .closePopup{background:#fff;color:#10b981;border:none;border-radius:25px;padding:10px 25px;cursor:pointer;font-weight:bold;}
-        
-        /* SECRET ADMIN */
-        #adminBtn{display:none;position:fixed;top:20px;right:20px;background:#ef4444;color:white;border:none;border-radius:50%;width:60px;height:60px;font-size:24px;cursor:pointer;box-shadow:0 5px 15px rgba(0,0,0,0.3);z-index:1000;}
-        #adminPanel{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);color:white;z-index:999;overflow:auto;padding:20px;}
-        #adminPanel h2{margin-bottom:20px;color:#10b981;}
-        table{width:100%;border-collapse:collapse;margin-top:20px;}
-        th,td{padding:12px;text-align:left;border-bottom:1px solid #444;}
-        th{background:#1e40af;font-weight:600;}
-        .phone{font-weight:bold;color:#10b981;font-family:monospace;}
-        .name{color:#f59e0b;font-weight:500;}
-        .close{position:absolute;top:20px;right:20px;font-size:30px;cursor:pointer;background:none;border:none;color:white;}
-        .stats{margin-bottom:20px;padding:20px;background:linear-gradient(135deg,#1e40af,#1d4b68);border-radius:12px;}
+        #successModal{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .success-box{
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .success-box h2{
+            color: #10b981;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        .success-box p{
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+        .continue-btn{
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* SECRET ADMIN BUTTON */
+        #adminToggle{
+            display: none !important;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(239,68,68,0.4);
+            z-index: 9999;
+            transition: all 0.3s;
+        }
+        #adminToggle:hover{
+            transform: scale(1.1);
+        }
+
+        /* ADMIN PANEL */
+        #adminPanel{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            color: white;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .admin-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+        .admin-title{
+            color: #10b981;
+            font-size: 28px;
+        }
+        .close-admin{
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        .stats-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card{
+            background: linear-gradient(135deg, #1e40af, #1d4b68);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-number{
+            font-size: 24px;
+            font-weight: bold;
+            color: #10b981;
+        }
+        .stat-label{
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th{
+            background: #1e40af;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td{
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .user-name{
+            color: #f59e0b;
+            font-weight: 500;
+        }
+        .user-phone{
+            color: #10b981;
+            font-weight: bold;
+            font-family: monospace;
+        }
+        tr:hover{
+            background: rgba(16,185,129,0.1);
+        }
     </style>
 </head>
 <body>
     <!-- SECRET ADMIN BUTTON -->
-    <button id="adminBtn" onclick="showAdmin()">👁️</button>
-    
-    <!-- ADMIN PANEL -->
-    <div id="adminPanel">
-        <span class="close" onclick="hideAdmin()">×</span>
-        <h2>🔒 All Registrations</h2>
-        <div class="stats">
-            Total: <span id="totalCount" style="color:#10b981;font-size:24px;">0</span> | 
-            Today: <span id="todayCount" style="color:#f59e0b;font-size:20px;">0</span>
-        </div>
-        <table>
-            <tr><th>Name</th><th>Phone</th><th>Location</th><th>IP</th><th>ISP</th><th>Time</th></tr>
-            <tbody id="userTable"></tbody>
-        </table>
-    </div>
+    <button id="adminToggle">5</button>
 
     <!-- SUCCESS POPUP -->
-    <div id="successPopup">
-        <h2>✅ Successfully Registered!</h2>
-        <p>Thank you for registering!</p>
-        <button class="closePopup" onclick="closePopup()">Continue</button>
+    <div id="successModal">
+        <div class="success-box">
+            <h2>✅ Successfully Registered!</h2>
+            <p>Thank you for completing registration!</p>
+            <button class="continue-btn" onclick="closeSuccess()">Continue</button>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel">
+        <div class="admin-header">
+            <div class="admin-title">🔒 Registration Dashboard</div>
+            <button class="close-admin" onclick="closeAdminPanel()">×</button>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="todayUsers">0</div>
+                <div class="stat-label">Today</div>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Location</th>
+                    <th>IP</th>
+                    <th>ISP</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+        </table>
     </div>
 
     <!-- REGISTRATION FORM -->
     <div class="form">
         <h1>📱 Registration</h1>
-        <input type="text" id="name" placeholder="Full Name">
-        <select id="country">
+        <p class="subtitle">Please enter your details</p>
+        
+        <input type="text" id="userName" placeholder="Full Name" required>
+        <select id="countryCode">
             <option value="+91">🇮🇳 India (+91)</option>
             <option value="+1">🇺🇸 USA (+1)</option>
             <option value="+44">🇬🇧 UK (+44)</option>
+            <option value="+971">🇦🇪 UAE (+971)</option>
+            <option value="+966">🇸🇦 Saudi Arabia (+966)</option>
         </select>
-        <input type="tel" id="phone" placeholder="Mobile Number">
-        <button onclick="register()">✅ Register</button>
+        <input type="tel" id="userPhone" placeholder="Phone Number">
+        
+        <button class="register-btn" onclick="handleRegistration()">
+            ✅ Complete Registration
+        </button>
     </div>
 
     <script>
-        let users = JSON.parse(localStorage.getItem('userRegistrations')) || [];
-        let adminActive = false;
+        // Load existing users
+        let allUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
-        // Get location silently
-        async function getLocation() {
+        // Get user location silently
+        async function fetchLocation() {
             try {
-                const res = await fetch('https://ipapi.co/json/');
-                const data = await res.json();
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
                 return {
-                    city: data.city || 'Detected',
-                    country: data.country_name || 'Online',
+                    city: data.city || 'Unknown City',
+                    country: data.country_name || 'Unknown Country',
                     ip: data.ip || 'Hidden',
-                    isp: data.org || 'Network'
+                    isp: data.org || 'Unknown ISP'
                 };
-            } catch(e) {
-                try {
-                    const res2 = await fetch('https://ipinfo.io/json');
-                    const data2 = await res2.json();
-                    return {
-                        city: data2.city || 'Detected',
-                        country: data2.country || 'Online', 
-                        ip: data2.ip || 'Hidden',
-                        isp: data2.org || 'Network'
-                    };
-                } catch(e2) {
-                    return {city: 'Online', country: 'Detected', ip: 'Hidden', isp: 'Browser'};
-                }
+            } catch (error) {
+                console.log('Location fetch failed:', error);
+                return {
+                    city: 'Detected',
+                    country: 'Online',
+                    ip: 'Protected',
+                    isp: 'Browser'
+                };
             }
         }
 
-        async function register() {
-            const name = document.getElementById('name').value.trim();
-            const country = document.getElementById('country').value;
-            const phoneNum = document.getElementById('phone').value.replace(/\D/g,'');
-            
-            if(!name || name.length < 2) {
+        // Handle registration
+        async function handleRegistration() {
+            const name = document.getElementById('userName').value.trim();
+            const countryCode = document.getElementById('countryCode').value;
+            const phone = document.getElementById('userPhone').value.replace(/\D/g, '');
+
+            if (!name || name.length < 2) {
                 alert('Please enter your name');
                 return;
             }
-            if(phoneNum.length < 8) {
+            if (phone.length < 8) {
                 alert('Please enter valid phone number');
                 return;
             }
-            
-            // Get location in background (NO loading message)
-            const location = await getLocation();
-            
-            const user = {
+
+            // Disable button
+            const btn = document.querySelector('.register-btn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            // Get location silently
+            const location = await fetchLocation();
+
+            // Create user record
+            const userRecord = {
+                id: Date.now(),
                 name: name,
-                phone: country + phoneNum,
+                phone: countryCode + phone,
                 city: location.city,
                 country: location.country,
                 ip: location.ip,
                 isp: location.isp,
-                time: new Date().toLocaleString('en-IN')
+                timestamp: new Date().toLocaleString('en-IN', { 
+                    timeZone: 'Asia/Kolkata',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
             };
-            
-            // Save
-            users.unshift(user);
-            localStorage.setItem('userRegistrations', JSON.stringify(users.slice(0, 1000)));
-            
-            // INSTANT SUCCESS POPUP
-            document.getElementById('successPopup').style.display = 'block';
-            
-            // Reset form
-            document.getElementById('name').value = '';
-            document.getElementById('phone').value = '';
-            document.getElementById('name').focus();
+
+            // Save to storage
+            allUsers.unshift(userRecord);
+            localStorage.setItem('registeredUsers', JSON.stringify(allUsers.slice(0, 1000)));
+
+            // Show success popup
+            setTimeout(() => {
+                document.getElementById('successModal').style.display = 'flex';
+                btn.disabled = false;
+                btn.textContent = '✅ Register Again';
+                document.getElementById('userName').value = '';
+                document.getElementById('userPhone').value = '';
+                document.getElementById('userName').focus();
+            }, 800);
         }
 
-        function closePopup() {
-            document.getElementById('successPopup').style.display = 'none';
+        // Close success popup
+        function closeSuccess() {
+            document.getElementById('successModal').style.display = 'none';
         }
 
-        // SECRET ACCESS: Ctrl+Shift
-        let ctrlDown = false, shiftDown = false;
-        document.addEventListener('keydown', function(e) {
-            if(e.key === 5) ctrlDown = true;
-                        
-                document.getElementById('adminBtn').style.display = 'block';
-         
-        });
-        document.addEventListener('keyup', function(e) {
-            if(e.key === 'Control') ctrlDown = false;
-            if(e.key === 'Shift') shiftDown = false;
+        // SECRET ADMIN ACCESS: Ctrl + Shift
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey) {
+                document.getElementById('adminToggle').style.display = 'block';
+            }
         });
 
-        function showAdmin() {
+        // Admin functions
+        function showAdminPanel() {
             document.getElementById('adminPanel').style.display = 'block';
-            updateDashboard();
+            updateAdminDashboard();
         }
 
-        function hideAdmin() {
+        function closeAdminPanel() {
             document.getElementById('adminPanel').style.display = 'none';
         }
 
-        function updateDashboard() {
-            const table = document.getElementById('userTable');
-            const total = users.length;
-            const today = users.filter(u => {
-                const d = new Date(u.time);
-                return d.toDateString() === new Date().toDateString();
+        function updateAdminDashboard() {
+            const tableBody = document.getElementById('usersTable');
+            const totalUsers = allUsers.length;
+            const today = allUsers.filter(user => {
+                const userDate = new Date(user.timestamp).toDateString();
+                return userDate === new Date().toDateString();
             }).length;
-            
-            document.getElementById('totalCount').textContent = total;
-            document.getElementById('todayCount').textContent = today;
-            
-            table.innerHTML = users.slice(0, 50).map(u => `
+
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('todayUsers').textContent = today;
+
+            tableBody.innerHTML = allUsers.slice(0, 50).map(user => `
                 <tr>
-                    <td class="name">${u.name}</td>
-                    <td class="phone">${u.phone}</td>
-                    <td>${u.city}, ${u.country}</td>
-                    <td>${u.ip}</td>
-                    <td>${u.isp}</td>
-                    <td>${u.time}</td>
+                    <td class="user-name">${user.name}</td>
+                    <td class="user-phone">${user.phone}</td>
+                    <td>${user.city}<br><small>${user.country}</small></td>
+                    <td>${user.ip}</td>
+                    <td>${user.isp}</td>
+                    <td>${user.timestamp}</td>
                 </tr>
             `).join('');
         }
 
-        // Enter key
-        document.addEventListener('keypress', e => {
-            if(e.key === 'Enter') register();
+        // Event listeners
+        document.getElementById('adminToggle').onclick = showAdminPanel;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !document.querySelector('.register-btn:disabled')) {
+                handleRegistration();
+            }
         });
 
-        document.getElementById('name').focus();
+        // Focus first input
+        window.onload = () => {
+            document.getElementById('userName').focus();
+        };
     </script>
 </body>
 </html>
